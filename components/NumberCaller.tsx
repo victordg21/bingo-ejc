@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ConfirmModal from "./ConfirmModal";
 
 type Props = {
   called: number[];
@@ -25,8 +26,30 @@ export default function NumberCaller({
 }: Props) {
   const [input, setInput] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [pendingNumber, setPendingNumber] = useState<number | null>(null);
+  // Snapshot of the pending tap, retained during the close animation so the
+  // modal can keep rendering its title/body while it fades out.
+  const [pendingSnapshot, setPendingSnapshot] = useState<{
+    n: number;
+    wasCalled: boolean;
+  } | null>(null);
 
   const lastCalled = called[called.length - 1];
+  const modalOpen = pendingNumber !== null;
+
+  const handleGridClick = (n: number) => {
+    setPendingSnapshot({ n, wasCalled: calledSet.has(n) });
+    setPendingNumber(n);
+  };
+
+  const handleModalConfirm = () => {
+    if (pendingNumber !== null) onToggle(pendingNumber);
+    setPendingNumber(null);
+  };
+
+  const handleModalCancel = () => {
+    setPendingNumber(null);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,16 +134,22 @@ export default function NumberCaller({
         {/* 90-number grid */}
         <div>
           <div className="text-xs uppercase tracking-wider text-slate-500 mb-2">
-            Clique para alternar
+            Clique para alternar (pede confirmação)
           </div>
-          <div className="grid grid-cols-10 gap-1">
+          <div
+            className={[
+              "grid grid-cols-10 gap-1 transition-opacity",
+              modalOpen ? "opacity-50 pointer-events-none" : "opacity-100",
+            ].join(" ")}
+            aria-hidden={modalOpen}
+          >
             {allNumbers.map((n) => {
               const isCalled = calledSet.has(n);
               const isLast = n === lastCalled;
               return (
                 <button
                   key={n}
-                  onClick={() => onToggle(n)}
+                  onClick={() => handleGridClick(n)}
                   className={[
                     "aspect-square rounded-md text-base font-bold tabular-nums transition-colors",
                     isLast
@@ -173,6 +202,25 @@ export default function NumberCaller({
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        open={modalOpen}
+        number={pendingSnapshot?.n ?? 0}
+        title={
+          pendingSnapshot?.wasCalled
+            ? `Remover número ${pendingSnapshot.n}?`
+            : `Adicionar número ${pendingSnapshot?.n ?? ""}?`
+        }
+        body={
+          pendingSnapshot?.wasCalled
+            ? "Este número já foi sorteado. Você tem certeza que deseja removê-lo da lista?"
+            : `Você tem certeza que deseja marcar o número ${pendingSnapshot?.n ?? ""} como sorteado?`
+        }
+        confirmLabel={pendingSnapshot?.wasCalled ? "Sim, remover" : "Sim, adicionar"}
+        variant={pendingSnapshot?.wasCalled ? "destructive" : "confirm"}
+        onConfirm={handleModalConfirm}
+        onCancel={handleModalCancel}
+      />
     </div>
   );
 }

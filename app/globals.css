@@ -13,3 +13,31 @@ html, body {
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
 }
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modal-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes modal-zoom-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes modal-zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.97); }
+}
+.modal-backdrop-in  { animation: modal-fade-in  150ms ease-out forwards; }
+.modal-backdrop-out { animation: modal-fade-out 120ms ease-in  forwards; }
+.modal-panel-in     { animation: modal-zoom-in  150ms ease-out forwards; }
+.modal-panel-out    { animation: modal-zoom-out 120ms ease-in  forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop-in, .modal-backdrop-out,
+  .modal-panel-in, .modal-panel-out {
+    animation-duration: 1ms;
+  }
+}
