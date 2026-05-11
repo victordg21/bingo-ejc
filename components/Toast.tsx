@@ -18,7 +18,7 @@ export function useToasts() {
 
 export function ToastRack({ items }: { items: ToastItem[] }) {
   return (
-    <div className="fixed top-4 right-4 z-40 flex flex-col gap-2 max-w-sm">
+    <div className="fixed inset-x-3 bottom-4 sm:inset-x-auto sm:right-4 z-40 flex flex-col gap-2 max-w-md sm:max-w-sm mx-auto sm:mx-0 pointer-events-none">
       {items.map((t) => (
         <ToastView key={t.id} item={t} />
       ))}
