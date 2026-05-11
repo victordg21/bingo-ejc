@@ -24,7 +24,7 @@ export default function CardLookup({ cards, calledSet }: Props) {
   const isWinner = card && missing.length === 0;
 
   return (
-    <div className="rounded-xl bg-white border border-slate-200 shadow-sm overflow-hidden sticky top-[88px]">
+    <div className="rounded-xl bg-white border border-slate-200 shadow-sm overflow-hidden lg:sticky lg:top-4">
       <div className="bg-slate-900 text-white px-5 py-3">
         <h2 className="text-sm font-semibold uppercase tracking-wider">Verificar cartela</h2>
       </div>

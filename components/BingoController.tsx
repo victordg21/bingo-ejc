@@ -89,7 +89,7 @@ export default function BingoController({ cards }: { cards: Card[] }) {
 
   return (
     <div className="min-h-screen">
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <header className="bg-white border-b border-slate-200">
         <div className="mx-auto max-w-[1600px] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Bingo EJC</h1>
