@@ -22,7 +22,6 @@ export default function TvClient({ cards }: { cards: Card[] }) {
     }
   }, []);
 
-  // Realtime
   useEffect(() => {
     const sb = getBrowserSupabase();
     if (!sb) return;
@@ -69,7 +68,6 @@ export default function TvClient({ cards }: { cards: Card[] }) {
     return out;
   }, [cards, calledSet]);
 
-  // Detect newly added last_called for pulse + sound
   const lastCalled = called[called.length - 1] ?? null;
   useEffect(() => {
     if (lastCalled !== null && lastCalled !== prevLastRef.current) {
@@ -82,7 +80,6 @@ export default function TvClient({ cards }: { cards: Card[] }) {
     if (lastCalled === null) prevLastRef.current = null;
   }, [lastCalled, muted]);
 
-  // Track newly-won cards for the "recent winners" ticker
   useEffect(() => {
     const newOnes: string[] = [];
     for (const code of winners) {
@@ -94,7 +91,6 @@ export default function TvClient({ cards }: { cards: Card[] }) {
     if (newOnes.length > 0) {
       setRecentWinners((prev) => [...newOnes.reverse(), ...prev].slice(0, 5));
     }
-    // also handle "winners decreased" e.g. after reset
     if (winners.length < newWinnersRef.current.size) {
       newWinnersRef.current = new Set(winners);
       setRecentWinners([]);
@@ -102,9 +98,7 @@ export default function TvClient({ cards }: { cards: Card[] }) {
   }, [winners]);
 
   const toggleMute = async () => {
-    if (muted) {
-      await unlockAudio();
-    }
+    if (muted) await unlockAudio();
     setMuted((m) => !m);
   };
 
@@ -124,26 +118,28 @@ export default function TvClient({ cards }: { cards: Card[] }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-hidden flex flex-col">
-      <header className="px-8 pt-6 pb-2 flex items-center justify-between">
-        <h1 className="text-4xl xl:text-5xl font-black tracking-tight">
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+      {/* ===== Header ===== */}
+      <header className="px-4 sm:px-6 xl:px-8 pt-3 sm:pt-5 pb-2 flex items-center justify-between gap-2">
+        <h1 className="text-lg sm:text-2xl xl:text-5xl font-black tracking-tight">
           🎉 BINGO DA FESTA
         </h1>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={toggleMute}
-            className="text-xs px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20"
-            title={muted ? "Ativar som" : "Mutar"}
+            className="text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/10 hover:bg-white/20"
           >
-            {muted ? "🔇 Som off" : "🔊 Som on"}
+            {muted ? "🔇" : "🔊"}
           </button>
           <span
-            className={`inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
-              connected ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"
+            className={`inline-flex items-center gap-1 text-[10px] sm:text-xs px-2 py-1 rounded-full ${
+              connected
+                ? "bg-emerald-500/20 text-emerald-300"
+                : "bg-amber-500/20 text-amber-300"
             }`}
           >
             <span
-              className={`inline-block w-2 h-2 rounded-full ${
+              className={`inline-block w-1.5 h-1.5 rounded-full ${
                 connected ? "bg-emerald-400" : "bg-amber-400 animate-pulse"
               }`}
             />
@@ -152,14 +148,15 @@ export default function TvClient({ cards }: { cards: Card[] }) {
         </div>
       </header>
 
-      <main className="flex-1 px-8 grid grid-cols-12 gap-8 items-stretch py-4">
-        {/* Last called - left column */}
-        <div className="col-span-3 flex flex-col justify-center">
-          <div className="text-sm uppercase tracking-[0.3em] text-slate-400 mb-2">
+      {/* ===== Mobile / portrait layout (default) ===== */}
+      <main className="xl:hidden flex-1 px-4 pb-4 space-y-4">
+        {/* Hero: last called */}
+        <div className="rounded-2xl bg-slate-900/60 border border-slate-800 p-4 text-center">
+          <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-slate-400">
             Último sorteado
           </div>
           <div
-            className={`text-[18rem] xl:text-[22rem] leading-none font-black tabular-nums text-amber-400 transition-transform ${
+            className={`text-[10rem] sm:text-[12rem] leading-none font-black tabular-nums text-amber-400 transition-transform ${
               pulse ? "scale-110" : "scale-100"
             }`}
             style={{ transitionDuration: "300ms" }}
@@ -168,7 +165,99 @@ export default function TvClient({ cards }: { cards: Card[] }) {
           </div>
         </div>
 
-        {/* 90 grid - center column */}
+        {/* Stats row */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-3 text-center">
+            <div className="text-[10px] uppercase tracking-widest text-slate-400">
+              Sorteados
+            </div>
+            <div className="text-4xl sm:text-5xl font-black tabular-nums mt-1">
+              {called.length}
+              <span className="text-xl text-slate-500">/90</span>
+            </div>
+          </div>
+          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-3 text-center">
+            <div className="text-[10px] uppercase tracking-widest text-slate-400">
+              Vencedores
+            </div>
+            <div className="text-4xl sm:text-5xl font-black tabular-nums text-emerald-400 mt-1">
+              {winners.length}
+            </div>
+          </div>
+        </div>
+
+        {/* 90 number grid */}
+        <div>
+          <div className="text-[10px] uppercase tracking-[0.3em] text-slate-400 mb-2">
+            90 números
+          </div>
+          <div className="grid grid-cols-10 gap-1">
+            {allNumbers.map((n) => {
+              const hit = calledSet.has(n);
+              const isLast = n === lastCalled;
+              return (
+                <div
+                  key={n}
+                  className={`aspect-square rounded flex items-center justify-center text-xs sm:text-sm font-black tabular-nums ${
+                    isLast
+                      ? "bg-amber-400 text-slate-900 ring-2 ring-amber-200"
+                      : hit
+                        ? "bg-emerald-500 text-white"
+                        : "bg-slate-800 text-slate-500"
+                  }`}
+                >
+                  {n}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Recent winners */}
+        {recentWinners.length > 0 && (
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.3em] text-slate-400 mb-1">
+              Últimas vitórias
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {recentWinners.map((code) => (
+                <span
+                  key={code}
+                  className="px-2 py-1 rounded font-mono font-bold text-emerald-300 bg-emerald-900/40 text-sm"
+                >
+                  🏆 #{code}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Join CTA */}
+        <div className="rounded-xl bg-white text-slate-900 p-3 flex items-center gap-3">
+          <QRCodeSVG value={joinUrl} size={64} level="M" includeMargin={false} />
+          <div className="text-xs min-w-0">
+            <div className="font-bold">Acompanhe no seu celular</div>
+            <div className="opacity-70 break-all">{joinUrl}</div>
+          </div>
+        </div>
+      </main>
+
+      {/* ===== Projector / xl layout ===== */}
+      <main className="hidden xl:grid flex-1 px-8 gap-8 items-stretch py-4 grid-cols-12">
+        <div className="col-span-3 flex flex-col justify-center">
+          <div className="text-sm uppercase tracking-[0.3em] text-slate-400 mb-2">
+            Último sorteado
+          </div>
+          <div
+            className={`text-[18rem] 2xl:text-[22rem] leading-none font-black tabular-nums text-amber-400 transition-transform ${
+              pulse ? "scale-110" : "scale-100"
+            }`}
+            style={{ transitionDuration: "300ms" }}
+          >
+            {lastCalled ?? "—"}
+          </div>
+        </div>
+
         <div className="col-span-6 flex flex-col justify-center">
           <div className="text-sm uppercase tracking-[0.3em] text-slate-400 mb-2">
             90 números
@@ -180,7 +269,7 @@ export default function TvClient({ cards }: { cards: Card[] }) {
               return (
                 <div
                   key={n}
-                  className={`aspect-square rounded-md flex items-center justify-center text-2xl xl:text-3xl font-black tabular-nums transition-colors ${
+                  className={`aspect-square rounded-md flex items-center justify-center text-2xl 2xl:text-3xl font-black tabular-nums transition-colors ${
                     isLast
                       ? "bg-amber-400 text-slate-900 ring-4 ring-amber-200"
                       : hit
@@ -195,18 +284,21 @@ export default function TvClient({ cards }: { cards: Card[] }) {
           </div>
         </div>
 
-        {/* Stats - right column */}
         <div className="col-span-3 flex flex-col justify-center gap-6">
           <div>
-            <div className="text-sm uppercase tracking-[0.3em] text-slate-400">Sorteados</div>
-            <div className="text-7xl xl:text-8xl font-black tabular-nums">
+            <div className="text-sm uppercase tracking-[0.3em] text-slate-400">
+              Sorteados
+            </div>
+            <div className="text-7xl 2xl:text-8xl font-black tabular-nums">
               {called.length}
               <span className="text-3xl text-slate-500">/90</span>
             </div>
           </div>
           <div>
-            <div className="text-sm uppercase tracking-[0.3em] text-slate-400">Vencedores</div>
-            <div className="text-7xl xl:text-8xl font-black tabular-nums text-emerald-400">
+            <div className="text-sm uppercase tracking-[0.3em] text-slate-400">
+              Vencedores
+            </div>
+            <div className="text-7xl 2xl:text-8xl font-black tabular-nums text-emerald-400">
               {winners.length}
             </div>
           </div>
@@ -221,7 +313,7 @@ export default function TvClient({ cards }: { cards: Card[] }) {
                 {recentWinners.map((code) => (
                   <div
                     key={code}
-                    className="text-2xl xl:text-3xl font-mono font-bold text-emerald-300"
+                    className="text-2xl 2xl:text-3xl font-mono font-bold text-emerald-300"
                   >
                     🏆 #{code}
                   </div>
@@ -232,9 +324,9 @@ export default function TvClient({ cards }: { cards: Card[] }) {
         </div>
       </main>
 
-      {/* Footer: QR + tagline */}
-      <footer className="px-8 pb-6 pt-2 flex items-end justify-between gap-8">
-        <div className="text-base xl:text-lg text-slate-400 max-w-xl">
+      {/* ===== Footer (xl only — mobile has its own CTA) ===== */}
+      <footer className="hidden xl:flex px-8 pb-6 pt-2 items-end justify-between gap-8">
+        <div className="text-base 2xl:text-lg text-slate-400 max-w-xl">
           Acompanhe suas cartelas no celular em tempo real. Compre acesso com o
           operador da festa — só <b className="text-white">R$ 5</b>.
         </div>
