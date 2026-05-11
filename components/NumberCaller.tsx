@@ -9,7 +9,7 @@ type Props = {
   onAdd: (n: number) => void;
   onToggle: (n: number) => void;
   onUndo: () => void;
-  onReset: () => void;
+  onResetRequest: () => void;
   min: number;
   max: number;
 };
@@ -20,7 +20,7 @@ export default function NumberCaller({
   onAdd,
   onToggle,
   onUndo,
-  onReset,
+  onResetRequest,
   min,
   max,
 }: Props) {
@@ -72,9 +72,7 @@ export default function NumberCaller({
 
   const handleReset = () => {
     if (called.length === 0) return;
-    if (window.confirm("Limpar todos os números chamados? Esta ação não pode ser desfeita.")) {
-      onReset();
-    }
+    onResetRequest();
   };
 
   // 9 rows x 10 columns: 1-10 row 1, 11-20 row 2, ...

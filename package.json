@@ -10,11 +10,15 @@
     "generate-cards": "node scripts/generate-cards.mjs && cp data/cards.json public/data/cards.json && cp data/cards.csv public/data/cards.csv"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.105.4",
+    "canvas-confetti": "^1.9.4",
     "next": "14.2.5",
+    "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
