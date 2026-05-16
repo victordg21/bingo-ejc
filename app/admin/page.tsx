@@ -3,7 +3,7 @@ import AdminClient from "@/components/AdminClient";
 import type { CardsFile } from "@/lib/types";
 
 export const metadata = {
-  title: "Admin — Bingo EJC",
+  title: "Admin — Bingo do São João",
 };
 
 export default function AdminPage() {

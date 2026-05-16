@@ -29,18 +29,20 @@ export default function QrCard({ buyer, joinUrl, compact }: Props) {
     if (!w) return;
     const cardList = buyer.card_codes.map(formatCardCode).join(", ");
     w.document.write(`<!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><title>${buyer.name} — Bingo EJC</title>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>${buyer.name} — Bingo do São João</title>
 <style>
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:32px;text-align:center;color:#0f172a}
   h1{font-size:24px;margin:0 0 4px}
+  .logo{width:64px;height:64px;margin:0 auto 8px;display:block}
   .code{font-size:48px;font-weight:900;letter-spacing:2px;margin:16px 0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
   .qr{display:flex;justify-content:center;margin:16px 0}
   .cards{font-size:13px;color:#334155;margin-top:24px}
   .url{font-size:12px;color:#64748b;margin-top:8px;word-break:break-all}
   @media print { body{padding:8px} }
 </style></head><body>
+  <img src="/neves-logo.png" alt="Movimento Neves" class="logo">
   <h1>${buyer.name}</h1>
-  <div>Bingo EJC — código de acesso</div>
+  <div>Bingo do São João — código de acesso</div>
   <div class="code">${buyer.access_code}</div>
   <div class="qr">${document.getElementById(`qr-${buyer.id}`)?.outerHTML ?? ""}</div>
   <div class="cards"><b>${buyer.card_codes.length}</b> ${buyer.card_codes.length === 1 ? "cartela" : "cartelas"}: ${cardList}</div>

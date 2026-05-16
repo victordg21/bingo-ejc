@@ -27,7 +27,7 @@ export default function Ranking({ ranked, winners }: Props) {
   return (
     <div className="rounded-xl bg-white border border-slate-200 shadow-sm overflow-hidden">
       <div className="bg-slate-900 text-white px-5 py-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wider">Ranking ao vivo</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wider">Ranking AO VIVO</h2>
         <span className="text-xs text-slate-300">
           {filtered.length} de {nonWinners.length}
         </span>

@@ -3,7 +3,7 @@ import JogarClient from "@/components/JogarClient";
 import type { CardsFile } from "@/lib/types";
 
 export const metadata = {
-  title: "Jogar — Bingo EJC",
+  title: "Jogar — Bingo do São João",
 };
 
 export default function JogarPage() {

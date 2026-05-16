@@ -156,11 +156,18 @@ export default function AdminClient({ cards }: Props) {
     <div className="min-h-screen">
       <header className="bg-white border-b border-slate-200">
         <div className="mx-auto max-w-[1600px] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Bingo EJC — Admin</h1>
-            <p className="text-xs text-slate-500">
-              {cards.length} cartelas · 15 números · 1–90
-            </p>
+          <div className="flex items-center gap-3">
+            <img
+              src="/neves-logo.png"
+              alt="Movimento Neves"
+              className="w-10 h-10 shrink-0"
+            />
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Bingo do São João — Admin</h1>
+              <p className="text-xs text-slate-500">
+                {cards.length} cartelas · 15 números · 1–90
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <span
@@ -176,7 +183,7 @@ export default function AdminClient({ cards }: Props) {
                   connected ? "bg-emerald-500" : "bg-amber-500 animate-pulse"
                 }`}
               />
-              {connected ? "ao vivo" : "conectando"}
+              {connected ? "AO VIVO" : "conectando"}
             </span>
             <div className="rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-2">
               <div className="text-[10px] uppercase tracking-wider text-emerald-700">

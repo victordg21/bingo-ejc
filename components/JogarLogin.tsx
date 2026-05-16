@@ -53,8 +53,15 @@ export default function JogarLogin({ initialCode, onAuthenticated }: Props) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-slate-100 px-4">
       <form onSubmit={submit} className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6">
-        <h1 className="text-2xl font-bold text-slate-900">Bingo EJC</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <div className="flex items-center gap-3">
+          <img
+            src="/neves-logo.png"
+            alt="Movimento Neves"
+            className="w-12 h-12 shrink-0"
+          />
+          <h1 className="text-2xl font-bold text-slate-900">Bingo do São João</h1>
+        </div>
+        <p className="text-sm text-slate-500 mt-2">
           Digite seu código de acesso para acompanhar suas cartelas em tempo real.
         </p>
 

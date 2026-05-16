@@ -32,8 +32,17 @@ export default function LoginForm({ from, configError }: { from?: string; config
 
   return (
     <div className="w-full max-w-sm rounded-xl bg-white shadow-2xl p-6">
-      <h1 className="text-2xl font-bold text-slate-900">Painel do operador</h1>
-      <p className="text-sm text-slate-500 mt-1">Bingo EJC</p>
+      <div className="flex items-center gap-3">
+        <img
+          src="/neves-logo.png"
+          alt="Movimento Neves"
+          className="w-12 h-12 shrink-0"
+        />
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Painel do operador</h1>
+          <p className="text-sm text-slate-500">Bingo do São João</p>
+        </div>
+      </div>
 
       {configError && (
         <div className="mt-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md p-3">

@@ -1,7 +1,7 @@
 import LoginForm from "./LoginForm";
 
 export const metadata = {
-  title: "Admin — Bingo EJC",
+  title: "Admin — Bingo do São João",
 };
 
 export default function AdminLoginPage({

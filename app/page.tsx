@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Bingo EJC",
+  title: "Bingo do São João — Movimento Neves",
 };
 
 export default function HomePage() {
@@ -9,8 +9,13 @@ export default function HomePage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
       <div className="w-full max-w-lg space-y-6">
         <header className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Bingo EJC</h1>
-          <p className="text-sm text-slate-500 mt-1">Festa da igreja · 1000 cartelas</p>
+          <img
+            src="/neves-logo.png"
+            alt="Movimento Neves"
+            className="w-20 h-20 mx-auto mb-3"
+          />
+          <h1 className="text-3xl font-bold tracking-tight">Bingo do São João</h1>
+          <p className="text-sm text-slate-500 mt-1">Movimento Neves · 1000 cartelas</p>
         </header>
 
         <div className="grid gap-3">

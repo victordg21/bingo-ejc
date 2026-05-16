@@ -2,23 +2,20 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import type { Card } from "@/lib/types";
 import { getBrowserSupabase, supabaseConfigured } from "@/lib/supabase/browser";
 import { playTick, unlockAudio } from "@/lib/sounds";
 
-export default function TvClient({ cards }: { cards: Card[] }) {
+export default function TvClient() {
   const [called, setCalled] = useState<number[]>([]);
   const [connected, setConnected] = useState(false);
   const [muted, setMuted] = useState(true);
   const [pulse, setPulse] = useState(false);
-  const [joinUrl, setJoinUrl] = useState("/jogar");
+  const [tvUrl, setTvUrl] = useState("/tv");
   const prevLastRef = useRef<number | null>(null);
-  const newWinnersRef = useRef<Set<string>>(new Set());
-  const [recentWinners, setRecentWinners] = useState<string[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setJoinUrl(`${window.location.origin}/jogar`);
+      setTvUrl(`${window.location.origin}/tv`);
     }
   }, []);
 
@@ -53,21 +50,6 @@ export default function TvClient({ cards }: { cards: Card[] }) {
 
   const calledSet = useMemo(() => new Set(called), [called]);
 
-  const winners = useMemo(() => {
-    const out: string[] = [];
-    for (const c of cards) {
-      let all = true;
-      for (const n of c.numbers) {
-        if (!calledSet.has(n)) {
-          all = false;
-          break;
-        }
-      }
-      if (all) out.push(c.code);
-    }
-    return out;
-  }, [cards, calledSet]);
-
   const lastCalled = called[called.length - 1] ?? null;
   useEffect(() => {
     if (lastCalled !== null && lastCalled !== prevLastRef.current) {
@@ -79,23 +61,6 @@ export default function TvClient({ cards }: { cards: Card[] }) {
     }
     if (lastCalled === null) prevLastRef.current = null;
   }, [lastCalled, muted]);
-
-  useEffect(() => {
-    const newOnes: string[] = [];
-    for (const code of winners) {
-      if (!newWinnersRef.current.has(code)) {
-        newWinnersRef.current.add(code);
-        newOnes.push(code);
-      }
-    }
-    if (newOnes.length > 0) {
-      setRecentWinners((prev) => [...newOnes.reverse(), ...prev].slice(0, 5));
-    }
-    if (winners.length < newWinnersRef.current.size) {
-      newWinnersRef.current = new Set(winners);
-      setRecentWinners([]);
-    }
-  }, [winners]);
 
   const toggleMute = async () => {
     if (muted) await unlockAudio();
@@ -121,9 +86,16 @@ export default function TvClient({ cards }: { cards: Card[] }) {
     <div className="min-h-screen bg-slate-950 text-white flex flex-col">
       {/* ===== Header ===== */}
       <header className="px-4 sm:px-6 xl:px-8 pt-3 sm:pt-5 pb-2 flex items-center justify-between gap-2">
-        <h1 className="text-lg sm:text-2xl xl:text-5xl font-black tracking-tight">
-          🎉 BINGO DA FESTA
-        </h1>
+        <div className="flex items-center gap-3 xl:gap-5 min-w-0">
+          <img
+            src="/neves-logo.png"
+            alt="Movimento Neves"
+            className="w-9 sm:w-11 xl:w-20 shrink-0"
+          />
+          <h1 className="text-lg sm:text-2xl xl:text-5xl font-black tracking-tight truncate">
+            BINGO DO SÃO JOÃO
+          </h1>
+        </div>
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={toggleMute}
@@ -166,23 +138,13 @@ export default function TvClient({ cards }: { cards: Card[] }) {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-3 text-center">
-            <div className="text-[10px] uppercase tracking-widest text-slate-400">
-              Sorteados
-            </div>
-            <div className="text-4xl sm:text-5xl font-black tabular-nums mt-1">
-              {called.length}
-              <span className="text-xl text-slate-500">/90</span>
-            </div>
+        <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-3 text-center">
+          <div className="text-[10px] uppercase tracking-widest text-slate-400">
+            Sorteados
           </div>
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-3 text-center">
-            <div className="text-[10px] uppercase tracking-widest text-slate-400">
-              Vencedores
-            </div>
-            <div className="text-4xl sm:text-5xl font-black tabular-nums text-emerald-400 mt-1">
-              {winners.length}
-            </div>
+          <div className="text-4xl sm:text-5xl font-black tabular-nums mt-1">
+            {called.length}
+            <span className="text-xl text-slate-500">/90</span>
           </div>
         </div>
 
@@ -213,31 +175,12 @@ export default function TvClient({ cards }: { cards: Card[] }) {
           </div>
         </div>
 
-        {/* Recent winners */}
-        {recentWinners.length > 0 && (
-          <div>
-            <div className="text-[10px] uppercase tracking-[0.3em] text-slate-400 mb-1">
-              Últimas vitórias
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {recentWinners.map((code) => (
-                <span
-                  key={code}
-                  className="px-2 py-1 rounded font-mono font-bold text-emerald-300 bg-emerald-900/40 text-sm"
-                >
-                  🏆 #{code}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Join CTA */}
         <div className="rounded-xl bg-white text-slate-900 p-3 flex items-center gap-3">
-          <QRCodeSVG value={joinUrl} size={64} level="M" includeMargin={false} />
+          <QRCodeSVG value={tvUrl} size={64} level="M" includeMargin={false} />
           <div className="text-xs min-w-0">
-            <div className="font-bold">Acompanhe no seu celular</div>
-            <div className="opacity-70 break-all">{joinUrl}</div>
+            <div className="font-bold">Veja o telão no seu celular</div>
+            <div className="opacity-70 break-all">{tvUrl}</div>
           </div>
         </div>
       </main>
@@ -294,47 +237,19 @@ export default function TvClient({ cards }: { cards: Card[] }) {
               <span className="text-3xl text-slate-500">/90</span>
             </div>
           </div>
-          <div>
-            <div className="text-sm uppercase tracking-[0.3em] text-slate-400">
-              Vencedores
-            </div>
-            <div className="text-7xl 2xl:text-8xl font-black tabular-nums text-emerald-400">
-              {winners.length}
-            </div>
-          </div>
-          <div>
-            <div className="text-sm uppercase tracking-[0.3em] text-slate-400 mb-1">
-              Últimas vitórias
-            </div>
-            {recentWinners.length === 0 ? (
-              <div className="text-slate-600 text-sm italic">aguardando…</div>
-            ) : (
-              <div className="space-y-1">
-                {recentWinners.map((code) => (
-                  <div
-                    key={code}
-                    className="text-2xl 2xl:text-3xl font-mono font-bold text-emerald-300"
-                  >
-                    🏆 #{code}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       </main>
 
       {/* ===== Footer (xl only — mobile has its own CTA) ===== */}
       <footer className="hidden xl:flex px-8 pb-6 pt-2 items-end justify-between gap-8">
         <div className="text-base 2xl:text-lg text-slate-400 max-w-xl">
-          Acompanhe suas cartelas no celular em tempo real. Compre acesso com o
-          operador da festa — só <b className="text-white">R$ 5</b>.
+          Acompanhe o telão no seu celular em tempo real.
         </div>
         <div className="flex items-center gap-3 bg-white p-3 rounded-lg">
-          <QRCodeSVG value={joinUrl} size={96} level="M" includeMargin={false} />
+          <QRCodeSVG value={tvUrl} size={96} level="M" includeMargin={false} />
           <div className="text-slate-900 text-sm">
-            <div className="font-bold">Escaneie para jogar</div>
-            <div className="text-xs opacity-70 break-all">{joinUrl}</div>
+            <div className="font-bold">Escaneie para ver o telão</div>
+            <div className="text-xs opacity-70 break-all">{tvUrl}</div>
           </div>
         </div>
       </footer>

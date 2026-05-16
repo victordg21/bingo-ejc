@@ -292,9 +292,16 @@ export default function JogarClient({ cards }: { cards: Card[] }) {
       <header className="sticky top-0 z-30 bg-white border-b border-slate-200">
         {/* Meta strip */}
         <div className="px-4 pt-2.5 pb-1 flex items-center justify-between text-xs">
-          <div className="truncate min-w-0 pr-2">
-            <span className="text-slate-500">Olá, </span>
-            <span className="font-semibold text-slate-900">{buyer.name}</span>
+          <div className="flex items-center gap-2 truncate min-w-0 pr-2">
+            <img
+              src="/neves-logo.png"
+              alt="Movimento Neves"
+              className="w-6 h-6 shrink-0"
+            />
+            <div className="truncate">
+              <span className="text-slate-500">Olá, </span>
+              <span className="font-semibold text-slate-900">{buyer.name}</span>
+            </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <ConnectionDot connected={connected} />
@@ -403,7 +410,7 @@ export default function JogarClient({ cards }: { cards: Card[] }) {
 function ConnectionDot({ connected }: { connected: boolean }) {
   return (
     <span
-      title={connected ? "ao vivo" : "reconectando"}
+      title={connected ? "AO VIVO" : "reconectando"}
       className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
         connected
           ? "bg-emerald-50 text-emerald-700"
@@ -415,7 +422,7 @@ function ConnectionDot({ connected }: { connected: boolean }) {
           connected ? "bg-emerald-500" : "bg-amber-500 animate-pulse"
         }`}
       />
-      {connected ? "ao vivo" : "…"}
+      {connected ? "AO VIVO" : "…"}
     </span>
   );
 }
