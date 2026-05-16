@@ -186,13 +186,13 @@ export default function TvClient() {
       </main>
 
       {/* ===== Projector / xl layout ===== */}
-      <main className="hidden xl:grid flex-1 px-8 gap-8 items-stretch py-4 grid-cols-12">
-        <div className="col-span-3 flex flex-col justify-center">
+      <main className="hidden xl:grid flex-1 px-8 gap-10 items-stretch py-4 grid-cols-12">
+        <div className="col-span-3 flex flex-col justify-center pr-4">
           <div className="text-sm uppercase tracking-[0.3em] text-slate-400 mb-2">
             Último sorteado
           </div>
           <div
-            className={`text-[18rem] 2xl:text-[22rem] leading-none font-black tabular-nums text-amber-400 transition-transform ${
+            className={`text-[13rem] 2xl:text-[17rem] leading-none font-black tabular-nums text-amber-400 transition-transform ${
               pulse ? "scale-110" : "scale-100"
             }`}
             style={{ transitionDuration: "300ms" }}
